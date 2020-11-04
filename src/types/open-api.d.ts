@@ -66,6 +66,7 @@ export interface OpenAPIXCodeSample {
 
 export interface OpenAPIOperation {
   tags?: string[];
+  dataClassification?: string[];
   summary?: string;
   description?: string;
   externalDocs?: OpenAPIExternalDocumentation;
@@ -87,6 +88,7 @@ export interface OpenAPIParameter {
   description?: string;
   required?: boolean;
   deprecated?: boolean;
+  dataClassification?: string[];
   allowEmptyValue?: boolean;
   style?: OpenAPIParameterStyle;
   explode?: boolean;
@@ -113,6 +115,7 @@ export interface OpenAPISchema {
   default?: any;
   items?: OpenAPISchema;
   required?: string[];
+  dataClassification?: string[];
   readOnly?: boolean;
   writeOnly?: boolean;
   deprecated?: boolean;

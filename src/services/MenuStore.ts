@@ -23,6 +23,7 @@ export interface IMenuItem {
   items: IMenuItem[];
   parent?: IMenuItem;
   deprecated?: boolean;
+  dataClassification?: string[];
   type: MenuItemType;
 
   deactivate(): void;

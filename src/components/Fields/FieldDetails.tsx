@@ -44,7 +44,7 @@ export class FieldDetails extends React.PureComponent<FieldProps, { patternShown
     const { patternShown } = this.state;
     const { enumSkipQuotes, hideSchemaTitles } = this.context;
 
-    const { schema, description, example, deprecated } = field;
+    const { schema, description, example, deprecated, dataClassification } = field;
 
     const rawDefault = !!enumSkipQuotes || field.in === 'header'; // having quotes around header field default values is confusing and inappropriate
 
@@ -98,6 +98,8 @@ export class FieldDetails extends React.PureComponent<FieldProps, { patternShown
             <Badge type="warning"> {l('deprecated')} </Badge>
           </div>
         )}
+        {dataClassification &&
+          dataClassification.map((item) => <Badge type="warning"> {item} </Badge>)}
         <FieldDetail raw={rawDefault} label={l('default') + ':'} value={schema.default} />
         {!renderDiscriminatorSwitch && <EnumValues type={schema.type} values={schema.enum} />}{' '}
         {exampleField}

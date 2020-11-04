@@ -81,6 +81,7 @@ export class Schema extends React.Component<Partial<SchemaProps>> {
       description: schema.description,
       externalDocs: schema.externalDocs,
       deprecated: false,
+      dataClassification: undefined,
       toggle: () => null,
       expanded: false,
     } as any) as FieldModel; // cast needed for hot-loader to not fail

@@ -49,7 +49,6 @@ export class Field extends React.Component<FieldProps> {
     const { className, field, isLast, expandByDefault } = this.props;
     const { name, deprecated, required, kind } = field;
     const withSubSchema = !field.schema.isPrimitive && !field.schema.isCircular;
-
     const expanded = field.expanded === undefined ? expandByDefault : field.expanded;
 
     const paramName = withSubSchema ? (

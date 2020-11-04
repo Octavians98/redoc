@@ -70,6 +70,7 @@ export class OperationModel implements IMenuItem {
   operationId?: string;
   httpVerb: string;
   deprecated: boolean;
+  dataClassification?: string[];
   path: string;
   servers: OpenAPIServer[];
   security: SecurityRequirementModel[];
@@ -99,6 +100,7 @@ export class OperationModel implements IMenuItem {
     this.path = operationSpec.pathName;
     this.isCallback = isCallback;
     this.isWebhook = !!operationSpec.isWebhook;
+    this.dataClassification = operationSpec["x-finastra-data-classification"];
 
     this.name = getOperationSummary(operationSpec);
 

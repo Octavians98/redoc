@@ -19,11 +19,15 @@ const renderRoot = (props: RedocProps) =>
 
 const big = window.location.search.indexOf('big') > -1;
 const swagger = window.location.search.indexOf('swagger') > -1;
+console.log("Swagger", swagger);
 
 const userUrl = window.location.search.match(/url=(.*)$/);
+console.log("Userurl", userUrl);
 
 const specUrl =
-  (userUrl && userUrl[1]) || (swagger ? 'swagger.yaml' : big ? 'big-openapi.json' : 'openapi.yaml');
+  (userUrl && userUrl[1]) || (true ? 'swagger.json' : big ? 'big-openapi.json' : 'openapi.yaml');
+
+  console.log("SpecUrl", specUrl);
 
 let store;
 const options: RedocRawOptions = { nativeScrollbars: false, maxDisplayedEnumValues: 3 };

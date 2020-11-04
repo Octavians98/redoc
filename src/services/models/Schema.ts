@@ -39,6 +39,7 @@ export class SchemaModel {
   displayFormat?: string;
   nullable: boolean;
   deprecated: boolean;
+  dataClassification?: string[];
   pattern?: string;
   example?: any;
   enum: any[];
@@ -110,6 +111,7 @@ export class SchemaModel {
     this.enum = schema.enum || [];
     this.example = schema.example;
     this.deprecated = !!schema.deprecated;
+    this.dataClassification = schema["x-finastra-data-classification"];
     this.pattern = schema.pattern;
     this.externalDocs = schema.externalDocs;
 
