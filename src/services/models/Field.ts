@@ -47,6 +47,7 @@ export class FieldModel {
   description: string;
   example?: string;
   deprecated: boolean;
+  dataClassification?: string[];
   in?: OpenAPIParameterLocation;
   kind: string;
   extensions?: Record<string, any>;
@@ -68,6 +69,7 @@ export class FieldModel {
     this.name = infoOrRef.name || info.name;
     this.in = info.in;
     this.required = !!info.required;
+    this.dataClassification = info["x-finastra-data-classification"];
 
     let fieldSchema = info.schema;
     let serializationMime = '';

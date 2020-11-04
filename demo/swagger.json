@@ -1,0 +1,910 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.5",
+    "title": "Account Information",
+    "description": "Retrieve customer accounts, balances and transactions history",
+    "x-finastra-short-description": "Retrieve customer accounts, balances and transactions history",
+    "x-finastra-category": "Consumer Banking",
+    "x-finastra-subcategory": "Account Information",
+    "x-finastra-tags": [
+      "Fusion Essence",
+      "Fusion Equation",
+      "Account",
+      "Excluding North America"
+    ],
+    "x-finastra-channel-type": "B2B",
+    "x-finastra-maturity-level": "BETA",
+    "x-finastra-audience": "PUBLIC",
+    "x-finastra-implementability": "RESTRICTED",
+    "x-finastra-icon": "Icons_2g.svg",
+    "x-finastra-data-classification": [
+      "Restricted"
+    ],
+    "x-finastra-commitId": "874889587425981650644e3fca569c6fafdf0c51",
+    "contact": {
+      "name": "API Support",
+      "url": "https://community.fusionfabric.cloud/index.html"
+    }
+  },
+  "tags": [
+    {
+      "name": "Accounts",
+      "description": "Retrieve details, balances and transactions for an account"
+    }
+  ],
+  "securityDefinitions": {
+    "Oauth2": {
+      "type": "oauth2",
+      "description": "Oauth 2.0 authentication",
+      "tokenUrl": "https://api.ffdcdev.fusionfabric.cloud/login/v1/sandbox/oidc/token",
+      "flow": "application",
+      "scopes": {}
+    }
+  },
+  "security": [
+    {
+      "Oauth2": []
+    }
+  ],
+  "paths": {
+    "/accounts": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "summary": "Retrieve List of Accounts",
+        "description": "Retrieves the list of accounts for a customer",
+        "operationId": "searchAccounts",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/X-Request-ID"
+          },
+          {
+            "$ref": "#/parameters/CustomerId"
+          },
+          {
+            "name": "accountType",
+            "in": "query",
+            "description": "The type of account as defined in ISO20022 : ExternalCashAccountType1Code format.\r\n The following are some sample values:\r\n * CACC - Current Account\r\n * SVGS - Savings Account\r\n * SLRY - Salary Account\r\n",
+            "type": "string",
+            "maxLength": 4
+          },
+          {
+            "$ref": "#/parameters/Limit"
+          },
+          {
+            "$ref": "#/parameters/Offset"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/SearchAccountsResponse"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-finastra-data-classification": [
+          "Restricted",
+          "Upload"
+        ]
+      }
+    },
+    "/accounts/{accountId}": {
+      "get": {
+        "summary": "Retrieve Account Details",
+        "description": "Retrieves the details of a customer account",
+        "operationId": "getAccountDetails",
+        "tags": [
+          "Accounts"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/X-Request-ID"
+          },
+          {
+            "$ref": "#/parameters/AccountId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/AccountDetail"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-finastra-data-classification": [
+          "Restricted"
+        ]
+      }
+    },
+    "/accounts/by": {
+      "get": {
+        "summary": "Retrieve Account Details using Alternate Identifier",
+        "description": "Retrieves the details of a customer account using one of the available alternate identifier.",
+        "operationId": "getAccountDetailsUsingAlternateIdentifier",
+        "tags": [
+          "Accounts"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/X-Request-ID"
+          },
+          {
+            "in": "query",
+            "name": "iban",
+            "description": "Account identifier in International Bank Account Number (IBAN) format. The format and content of the IBAN can be found in the standard ISO 13616",
+            "required": true,
+            "maxLength": 34,
+            "type": "string",
+            "x-finastra-data-classification": [
+              "Restricted"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/AccountDetail"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-finastra-data-classification": [
+          "Restricted"
+        ]
+      }
+    },
+    "/accounts/{accountId}/balances": {
+      "get": {
+        "summary": "Retrieve Account Balances",
+        "description": "Retrieves the balances of a customer account",
+        "operationId": "getAccountBalance",
+        "tags": [
+          "Accounts"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/X-Request-ID"
+          },
+          {
+            "$ref": "#/parameters/AccountId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/AccountBalance"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-finastra-data-classification": [
+          "Restricted"
+        ]
+      }
+    },
+    "/accounts/{accountId}/transactions": {
+      "get": {
+        "summary": "Retrieve Account Transactions",
+        "description": "Retrieves the transactions for a customer account",
+        "operationId": "getAccountTransactions",
+        "tags": [
+          "Accounts"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/X-Request-ID"
+          },
+          {
+            "$ref": "#/parameters/AccountId"
+          },
+          {
+            "in": "query",
+            "name": "startDate",
+            "description": "Date to start transaction history filter. The value follows the  ISO8601 full-date notation, for example, 2017-07-21.\r\nDefault or *blank* startDate will retrieve transactions starting from the system/current date.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "in": "query",
+            "name": "endDate",
+            "description": "Date to end transaction history filter. The value follows the ISO8601 full-date notation, for example, 2017-07-21.",
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "$ref": "#/parameters/Limit"
+          },
+          {
+            "$ref": "#/parameters/Offset"
+          },
+          {
+            "in": "query",
+            "name": "sort",
+            "description": "Determines how the results should be sorted, using the values from available properties followed by either *+asc* or *+desc* parameters where *asc* means ascending and *desc* means descending order.\r\n\r\nThe sort parameter should be in the following format:\r\n * *(propertyName)*+[asc|desc], *(propertyName)*+[asc|desc]\r\n\r\nFor example:\r\n  * GET /accounts/0543123467001/transactions?sort=valueDateTime+asc\r\n\r\nThe following are available properties for sorting:\r\n * valueDateTime - Transaction value date and time. By default, transactions will be sorted by *valueDateTime* in descending order.",
+            "type": "string",
+            "maxLength": 30
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "schema": {
+              "$ref": "#/definitions/TransactionResponse"
+            }
+          },
+          "400": {
+            "description": "Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "x-finastra-data-classification": [
+          "Restricted"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "SearchAccountsResponse": {
+      "title": "Search Accounts Response",
+      "type": "object",
+      "description": "List of accounts",
+      "properties": {
+        "items": {
+          "description": "List of accounts",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccountDetail"
+          },
+          "x-finastra-data-classification": [
+            "Restricted"
+          ]
+        },
+        "links": {
+          "$ref": "#/definitions/AccountsLinks"
+        }
+      }
+    },
+    "AccountsLinks": {
+      "title": "Accounts Links",
+      "type": "object",
+      "description": "Links that can be used for further navigation when browsing through accounts of a customer. Length of a page is defined by the offset and limit values. \r\n * self: link to the accounts of a given customer\r\n * first: link to the first page of the accounts result\r\n * next: link to the next page of the accounts result\r\n * prev: link to the previous page of the accounts result",
+      "required": [
+        "self"
+      ],
+      "properties": {
+        "self": {
+          "$ref": "#/definitions/GenericLink"
+        },
+        "first": {
+          "$ref": "#/definitions/GenericLink"
+        },
+        "next": {
+          "$ref": "#/definitions/GenericLink"
+        },
+        "prev": {
+          "$ref": "#/definitions/GenericLink"
+        }
+      }
+    },
+    "TransactionResponse": {
+      "title": "Transaction Response",
+      "type": "object",
+      "description": "List of transactions",
+      "properties": {
+        "accountId": {
+          "$ref": "#/definitions/AccountId"
+        },
+        "items": {
+          "description": "List of transactions",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Transaction"
+          }
+        },
+        "links": {
+          "$ref": "#/definitions/TransactionLinks"
+        }
+      }
+    },
+    "AccountId": {
+      "description": "The accountId is a unique and unambiguous identification of a bank account",
+      "title": "AccountId",
+      "type": "string",
+      "maxLength": 25,
+      "example": "0543123467001",
+      "x-finastra-data-classification": [
+        "Restricted"
+      ]
+    },
+    "AccountDetail": {
+      "description": "Basic information of the account",
+      "type": "object",
+      "title": "Account Detail",
+      "properties": {
+        "accountId": {
+          "$ref": "#/definitions/AccountId"
+        },
+        "accountName": {
+          "description": "The name of the account",
+          "type": "string",
+          "maxLength": 50,
+          "example": "Payroll Account",
+          "x-finastra-data-classification": [
+            "Restricted"
+          ]
+        },
+        "currency": {
+          "$ref": "#/definitions/Currency"
+        },
+        "customerType": {
+          "description": "The type of customer, either a person or an organisation",
+          "type": "string",
+          "maxLength": 12,
+          "enum": [
+            "PERSON",
+            "ORGANISATION"
+          ]
+        },
+        "accountType": {
+          "$ref": "#/definitions/AccountTypes"
+        },
+        "accountStatus": {
+          "description": " Indicates whether the account can be used or whether its' use has been suspended or terminated",
+          "type": "string",
+          "enum": [
+            "ENABLED",
+            "BLOCKED",
+            "CLOSED"
+          ]
+        },
+        "accountOwnership": {
+          "description": "Indentifies whether the account is is owned by a sole customer or jointly",
+          "type": "string",
+          "enum": [
+            "SOLE",
+            "JOINT"
+          ]
+        },
+        "postingsRestriction": {
+          "description": " Indicates any restriction on whether the account may be debited and/or credited",
+          "type": "string",
+          "enum": [
+            "DEBITCREDIT",
+            "DEBIT",
+            "CREDIT",
+            "NONE"
+          ]
+        },
+        "iban": {
+          "$ref": "#/definitions/IBAN"
+        },
+        "bban": {
+          "$ref": "#/definitions/BBAN"
+        }
+      }
+    },
+    "AccountBalance": {
+      "type": "object",
+      "title": "Account Balance",
+      "description": "Account balance details",
+      "properties": {
+        "accountId": {
+          "$ref": "#/definitions/AccountId"
+        },
+        "balances": {
+          "$ref": "#/definitions/BalanceList"
+        }
+      }
+    },
+    "BalanceType": {
+      "title": "Balance Type",
+      "description": "The following are balance types and description:\r\n * CLOSINGBOOKED - Balance of the account at the end of the pre-agreed account reporting period. It is the sum of the opening booked balance at the beginning of the period and all entries booked to the account during the pre-agreed account reporting period.\r\n * OPENINGBOOKED - Book balance of the account at the beginning of the account reporting period. It always equals the closing book balance from the previous report.\r\n * INTERIMAVAILABLE -  Available balance calculated in the course of the account ?servicer?s business day, at the time specified, and subject to further changes during the business day. The interim balance is calculated on the basis of booked credit and debit items during the calculation time/period specified.\r\n * INTERIMBOOKED - Balance calculated in the course of the account servicer's business day, at the time specified, and subject to further changes during the business day. The interim balance is calculated on the basis of booked credit and debit items during the calculation time/period specified.\r\n * INTERIMCLEARD - Balance which includes all cleared account items into and out of the account since the previous business day excluding uncleared items and excluding reserved amounts",
+      "type": "string",
+      "maxLength": 25,
+      "enum": [
+        "CLOSINGBOOKED",
+        "OPENINGBOOKED",
+        "INTERIMAVAILABLE",
+        "INTERIMBOOKED",
+        "INTERIMCLEARED"
+      ]
+    },
+    "BalanceList": {
+      "title": "Balance List",
+      "description": "List of account balances",
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Balance"
+      }
+    },
+    "Balance": {
+      "title": "Balance",
+      "description": "Structure of an account balance",
+      "type": "object",
+      "properties": {
+        "balanceType": {
+          "$ref": "#/definitions/BalanceType"
+        },
+        "amount": {
+          "$ref": "#/definitions/MonetaryAmount"
+        },
+        "dateTime": {
+          "description": "Reference date and time of the balance. The format follows the ISO8601 date-time notation.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Transaction detail",
+      "type": "object",
+      "properties": {
+        "transactionId": {
+          "description": "Unique transaction identifier",
+          "type": "string",
+          "maxLength": 50,
+          "example": "543123467001"
+        },
+        "bookingDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The booking date and time of the transaction. The format follows the ISO8601 date-time notation.",
+          "example": "2019-02-01T00:00:00.000+01:00"
+        },
+        "valueDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The value date and time of the transaction. The format follows the ISO8601 date-time notation",
+          "example": "2019-02-01T00:00:00.000+01:00"
+        },
+        "description": {
+          "type": "string",
+          "description": "Defines the transaction description.",
+          "maxLength": 100,
+          "example": "Fund transfer"
+        },
+        "amount": {
+          "$ref": "#/definitions/TransactionAmount",
+          "description": "The amount transacted and the currency"
+        },
+        "creditDebitIndicator": {
+          "description": "The posting type (debit or credit)",
+          "type": "string",
+          "enum": [
+            "DEBIT",
+            "CREDIT"
+          ]
+        },
+        "debtor": {
+          "description": "Account numbers of the debtor",
+          "$ref": "#/definitions/AccountNumbers"
+        },
+        "creditor": {
+          "description": "Account numbers of the creditor",
+          "$ref": "#/definitions/AccountNumbers"
+        }
+      }
+    },
+    "AccountNumbers": {
+      "title": "Account Numbers",
+      "type": "object",
+      "description": "Different account numbers",
+      "properties": {
+        "iban": {
+          "$ref": "#/definitions/IBAN"
+        },
+        "accountId": {
+          "$ref": "#/definitions/AccountId"
+        },
+        "accountName": {
+          "description": "Name of the acccount",
+          "type": "string",
+          "maxLength": 50,
+          "example": "Payroll Account",
+          "x-finastra-data-classification": [
+            "Restricted"
+          ]
+        },
+        "bban": {
+          "$ref": "#/definitions/BBAN"
+        },
+        "bic": {
+          "$ref": "#/definitions/BIC"
+        }
+      }
+    },
+    "IBAN": {
+      "description": "International Bank Account Number (IBAN) Identifier.\r\nIdentifier used internationally by financial institutions to uniquely identify the account of a customer at a financial institution, as described in the latest edition of the international standard ISO 13616.",
+      "title": "IBAN",
+      "type": "string",
+      "maxLength": 34,
+      "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
+      "example": "GB33BUKB20201555555555",
+      "x-finastra-data-classification": [
+        "Restricted"
+      ]
+    },
+    "BIC": {
+      "description": "Bank Identifier Code.\r\nISO20022: Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 *Banking - Banking telecommunication messages - Business identification code (BIC)*",
+      "title": "BIC",
+      "type": "string",
+      "pattern": "[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}",
+      "example": "BOFIIE2D"
+    },
+    "BBAN": {
+      "description": " Basic Bank Account Number (BBAN) Identifier\r\nIdentifier used nationally by financial institutions, i.e., in individual countries, generally as part of a National Account Numbering Scheme(s), which uniquely identifies the account of a customer.",
+      "title": "BBAN",
+      "type": "string",
+      "maxLength": 30,
+      "pattern": "[a-zA-Z0-9]{1,30}",
+      "example": "NWBK60161331926819",
+      "x-finastra-data-classification": [
+        "Restricted"
+      ]
+    },
+    "AccountTypes": {
+      "description": "The type of account in ISO2022 : ExternalCashAccountType1Code format.\r\n The following are some sample values:\r\n * CACC - Current Account\r\n * SVGS - Savings Account\r\n * SLRY - Salary Account\r\n",
+      "title": "AccountTypes",
+      "type": "string",
+      "maxLength": 4,
+      "example": "CACC"
+    },
+    "Amount": {
+      "title": "Amount",
+      "description": "The amount given with fractional digits.\r\n Negative amounts are signed by minus. The decimal separator is a dot.",
+      "type": "string",
+      "pattern": "-?[0-9]{1,18}(\\.[0-9]{1,3})?",
+      "example": "5877.78"
+    },
+    "MonetaryAmount": {
+      "title": "Monetary Amount",
+      "description": "A monetary amount in a given currency supporting an amount format of 18.3",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "$ref": "#/definitions/Amount"
+        },
+        "currency": {
+          "$ref": "#/definitions/Currency"
+        }
+      }
+    },
+    "TransactionAmount": {
+      "title": "Transaction Amount",
+      "description": "A monetary amount in a given currency supporting an amount format of 18.3. The amount is always positive.",
+      "type": "object",
+      "properties": {
+        "amount": {
+          "title": "Transaction Amount",
+          "description": "The amount given with fractional digits. The decimal separator is a dot. The amount must be positive",
+          "type": "string",
+          "pattern": "^[0-9]{1,18}(\\.[0-9]{1,3})?",
+          "example": "5877.78"
+        },
+        "currency": {
+          "$ref": "#/definitions/Currency"
+        }
+      }
+    },
+    "Currency": {
+      "title": "Currency",
+      "description": "ISO 4217: currency code, it is the identifier of the currency",
+      "type": "string",
+      "pattern": "^[A-Z]{3,3}$",
+      "example": "EUR"
+    },
+    "TransactionLinks": {
+      "title": "Transaction Links",
+      "type": "object",
+      "description": "Links that can be used for further navigation when browsing through transactions of an account. Length of a page is defined by the offset and limit values. \r\n * self: link to the transactions of a given account\r\n * first: link to the first page of the transactions result\r\n * next: link to the next page of the transactions result\r\n * prev: link to the previous page of the transactions result",
+      "required": [
+        "self"
+      ],
+      "properties": {
+        "self": {
+          "$ref": "#/definitions/GenericLink"
+        },
+        "first": {
+          "$ref": "#/definitions/GenericLink"
+        },
+        "next": {
+          "$ref": "#/definitions/GenericLink"
+        },
+        "prev": {
+          "$ref": "#/definitions/GenericLink"
+        }
+      }
+    },
+    "GenericLink": {
+      "title": "Generic Link",
+      "type": "object",
+      "required": [
+        "href"
+      ],
+      "properties": {
+        "href": {
+          "type": "string",
+          "description": "URI to be used",
+          "maxLength": 140
+        },
+        "templated": {
+          "type": "boolean",
+          "description": "specifies \"true\" if href is a URI template, i.e. with parameters. Otherwise, this property is absent or set to false"
+        }
+      },
+      "description": "Hypertext reference"
+    },
+    "ErrorResponse": {
+      "title": "ErrorResponse",
+      "type": "object",
+      "description": "Used as a standard error message structure that complies with RFC7807",
+      "required": [
+        "title",
+        "status"
+      ],
+      "properties": {
+        "type": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "A URI reference that identifies the  problem type",
+          "example": "https://api.finastra.com/validation-error"
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "A short summary of the problem type.",
+          "example": "The request is invalid"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": "The HTTP status code generated by the origin server for this occurrence of the problem.",
+          "example": 400
+        },
+        "detail": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "A human-readable explanation specific to this occurrence of the problem.",
+          "example": "The account does not exist"
+        },
+        "causes": {
+          "description": "An optional array of additional causes associated with the error",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Cause"
+          }
+        }
+      }
+    },
+    "Cause": {
+      "title": "Cause",
+      "type": "object",
+      "description": "Used to define additional causes associated with the error when the associated error message does not provide sufficient clarity on remediation of the error",
+      "properties": {
+        "code": {
+          "type": "string",
+          "maxLength": 8,
+          "description": "A code referencing the problem associated with this cause of the error",
+          "example": "40280151"
+        },
+        "message": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "A short human-readable summary of the problem associated with this cause of the error",
+          "example": "The account '1234567890' is dormant."
+        },
+        "severity": {
+          "type": "string",
+          "maxLength": 25,
+          "description": "The severity associated with this cause of the error",
+          "example": "ERROR"
+        },
+        "comment": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "A short human-readable comment or note associated with this cause of the error",
+          "example": "Ensure the account is active for the request"
+        },
+        "field": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "The field associated with this cause of the error",
+          "example": "account"
+        },
+        "fieldValue": {
+          "type": "string",
+          "maxLength": 256,
+          "description": "The value of the field associated with this cause of the error",
+          "example": "1234567890"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "X-Request-ID": {
+      "name": "X-Request-ID",
+      "description": "A unique ID of the request, unique to the call, as determined by the initiating party. A UUID must be set in this header to uniquely identify the request.",
+      "in": "header",
+      "required": true,
+      "type": "string",
+      "format": "uuid"
+    },
+    "CustomerId": {
+      "name": "customerId",
+      "in": "query",
+      "description": "The customerId is a unique and unambiguous identification of a bank customer.\r\n Wildcard characters are not accepted.",
+      "required": true,
+      "maxLength": 35,
+      "type": "string",
+      "x-finastra-data-classification": [
+        "Restricted",
+        "Upload"
+      ]
+    },
+    "AccountId": {
+      "name": "accountId",
+      "in": "path",
+      "description": "The accountId is a unique and unambiguous identification of a bank account",
+      "type": "string",
+      "required": true,
+      "maxLength": 25,
+      "x-finastra-data-classification": [
+        "Restricted"
+      ]
+    },
+    "Limit": {
+      "name": "limit",
+      "in": "query",
+      "description": "The maximum number of rows that may be returned. This parameter can be thought of as the page size.",
+      "type": "integer",
+      "format": "int32",
+      "default": 10
+    },
+    "Offset": {
+      "in": "query",
+      "name": "offset",
+      "description": "Set to offset the results to a particular row count.\n\n Example: GET /accounts?offset=100 will return the accounts 101 and more.",
+      "type": "integer",
+      "format": "int32",
+      "default": 0
+    }
+  },
+  "host": "api.ffdcdev.fusionfabric.cloud",
+  "basePath": "/retail-banking/accounts/v1",
+  "schemes": [
+    "https"
+  ]
+}

@@ -17,7 +17,9 @@ const server = http.createServer(async (request, response) => {
   console.time('request ' + request.url);
   if (request.url === '/redoc.standalone.js') {
     fs.createReadStream('bundles/redoc.standalone.js', 'utf8').pipe(response);
+    console.log("Aici");
   } else if (request.url === '/') {
+    console.log("Dincolo");
     const spec = yaml.load(readFileSync(resolve(__dirname, '../openapi.yaml')));
     let store = await createStore(spec, 'path/to/spec.yaml');
 
@@ -56,6 +58,7 @@ const server = http.createServer(async (request, response) => {
     response.write(res);
     response.end();
   } else {
+    console.log("Not founda acolo");
     response.writeHead(404);
     response.write('Not found');
     response.end();

@@ -37,7 +37,14 @@ export class Operation extends React.Component<OperationProps> {
   render() {
     const { operation } = this.props;
 
-    const { name: summary, description, deprecated, externalDocs, isWebhook } = operation;
+    const {
+      name: summary,
+      description,
+      deprecated,
+      externalDocs,
+      isWebhook,
+      dataClassification,
+    } = operation;
     const hasDescription = !!(description || externalDocs);
 
     return (
@@ -49,6 +56,8 @@ export class Operation extends React.Component<OperationProps> {
                 <ShareLink to={operation.id} />
                 {summary} {deprecated && <Badge type="warning"> Deprecated </Badge>}
                 {isWebhook && <Badge type="primary"> Webhook </Badge>}
+                {dataClassification &&
+                  dataClassification.map((item) => <Badge type="primary"> {item} </Badge>)}
               </H2>
               {options.pathInMiddlePanel && !isWebhook && (
                 <Endpoint operation={operation} inverted={true} />

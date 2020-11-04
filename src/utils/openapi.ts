@@ -591,6 +591,7 @@ export function isRedocExtension(key: string): boolean {
     'x-servers': true,
     'x-tagGroups': true,
     'x-traitTag': true,
+    'x-finastra-data-classification': true,
     'x-additionalPropertiesName': true,
     'x-explicitMappingOnly': true,
   };
