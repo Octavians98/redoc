@@ -19,7 +19,7 @@ import { FieldProps } from './Field';
 import { ConstraintsView } from './FieldContstraints';
 import { FieldDetail } from './FieldDetail';
 
-import { Badge } from '../../common-elements/';
+import { Badge, FinastraBadge } from '../../common-elements/';
 
 import { l } from '../../services/Labels';
 import { OptionsContext } from '../OptionsProvider';
@@ -75,7 +75,15 @@ export class FieldDetails extends React.PureComponent<FieldProps, { patternShown
             </TypeFormat>
           )}
           {schema.title && !hideSchemaTitles && <TypeTitle> ({schema.title}) </TypeTitle>}
+
           <ConstraintsView constraints={schema.constraints} />
+          {dataClassification &&
+            dataClassification.map((item) => (
+              <FinastraBadge type="dataClassificationField" className="field-data-classification">
+                {' '}
+                {item}{' '}
+              </FinastraBadge>
+            ))}
           {schema.nullable && <NullableLabel> {l('nullable')} </NullableLabel>}
           {schema.pattern && (
             <>
@@ -98,8 +106,6 @@ export class FieldDetails extends React.PureComponent<FieldProps, { patternShown
             <Badge type="warning"> {l('deprecated')} </Badge>
           </div>
         )}
-        {dataClassification &&
-          dataClassification.map((item) => <Badge type="warning"> {item} </Badge>)}
         <FieldDetail raw={rawDefault} label={l('default') + ':'} value={schema.default} />
         {!renderDiscriminatorSwitch && <EnumValues type={schema.type} values={schema.enum} />}{' '}
         {exampleField}

@@ -58,7 +58,6 @@ const server = http.createServer(async (request, response) => {
     response.write(res);
     response.end();
   } else {
-    console.log("Not founda acolo");
     response.writeHead(404);
     response.write('Not found');
     response.end();

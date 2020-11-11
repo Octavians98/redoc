@@ -35,15 +35,15 @@ class IntShelfIcon extends React.PureComponent<{
 }
 
 export const ShelfIcon = styled(IntShelfIcon)`
-  height: ${props => props.size || '18px'};
-  width: ${props => props.size || '18px'};
+  height: ${(props) => props.size || '18px'};
+  width: ${(props) => props.size || '18px'};
   vertical-align: middle;
-  float: ${props => props.float || ''};
+  float: ${(props) => props.float || ''};
   transition: transform 0.2s ease-out;
-  transform: rotateZ(${props => directionMap[props.direction || 'down']});
+  transform: rotateZ(${(props) => directionMap[props.direction || 'down']});
 
   polygon {
-    fill: ${props =>
+    fill: ${(props) =>
       (props.color && props.theme.colors[props.color] && props.theme.colors[props.color].main) ||
       props.color};
   }
@@ -53,14 +53,35 @@ export const Badge = styled.span<{ type: string }>`
   display: inline-block;
   padding: 2px 8px;
   margin: 0;
-  background-color: ${props => props.theme.colors[props.type].main};
-  color: ${props => props.theme.colors[props.type].contrastText};
-  font-size: ${props => props.theme.typography.code.fontSize};
+  background-color: ${(props) => props.theme.colors[props.type].main};
+  color: ${(props) => props.theme.colors[props.type].contrastText};
+  font-size: ${(props) => props.theme.typography.code.fontSize};
   vertical-align: middle;
   line-height: 1.6;
   border-radius: 4px;
   font-weight: ${({ theme }) => theme.typography.fontWeightBold};
   font-size: 12px;
+  + span[type] {
+    margin-left: 4px;
+  }
+`;
+
+export const FinastraBadge = styled.span<{ type: string }>`
+  display: inline-block;
+  padding: 2px 8px;
+  margin: 0;
+  height: 20px;
+  width: 78px;
+  background-color: ${(props) => props.theme.colors[props.type].main};
+  color: ${(props) => props.theme.colors[props.type].contrastText};
+  vertical-align: middle;
+  line-height: 16px;
+  border-radius: 10px;
+  letter-spacing: 0.12px;
+  font-weight: 500;
+  font-size: 12px;
+  font-family: Roboto;
+  text-align: center;
   + span[type] {
     margin-left: 4px;
   }

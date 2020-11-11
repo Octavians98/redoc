@@ -1,7 +1,7 @@
 import { observer } from 'mobx-react';
 import * as React from 'react';
 
-import { Badge, DarkRightPanel, H2, MiddlePanel, Row } from '../../common-elements';
+import { Badge, DarkRightPanel, FinastraBadge, H2, MiddlePanel, Row } from '../../common-elements';
 import { ShareLink } from '../../common-elements/linkify';
 import { OperationModel } from '../../services/models';
 import styled from '../../styled-components';
@@ -57,7 +57,15 @@ export class Operation extends React.Component<OperationProps> {
                 {summary} {deprecated && <Badge type="warning"> Deprecated </Badge>}
                 {isWebhook && <Badge type="primary"> Webhook </Badge>}
                 {dataClassification &&
-                  dataClassification.map((item) => <Badge type="primary"> {item} </Badge>)}
+                  dataClassification.map((item) => (
+                    <FinastraBadge
+                      type="dataClassificationEndpoint"
+                      className="endpoint-data-classification"
+                    >
+                      {' '}
+                      {item}{' '}
+                    </FinastraBadge>
+                  ))}
               </H2>
               {options.pathInMiddlePanel && !isWebhook && (
                 <Endpoint operation={operation} inverted={true} />
