@@ -1,38 +1,461 @@
 {
   "swagger": "2.0",
   "info": {
-    "version": "1.0.5",
-    "title": "Account Information",
-    "description": "Retrieve customer accounts, balances and transactions history",
-    "x-finastra-short-description": "Retrieve customer accounts, balances and transactions history",
+    "description": "Merchant Initiates a payment request to customer account, so that the customer can give their consent to complete the transaction at merchant web site.",
+    "version": "1.3.0",
+    "title": "Payment Request (PSD2, STET)",
     "x-finastra-category": "Consumer Banking",
-    "x-finastra-subcategory": "Account Information",
+    "x-finastra-subcategory": "Payments",
+    "x-finastra-short-description": "Merchant Initiates a payment request to customer account, so that the customer can give their consent to complete the transaction at merchant web site.",
     "x-finastra-tags": [
-      "Fusion Essence",
-      "Fusion Equation",
-      "Account",
+      "Fusion Digital Channels",
+      "Payment",
       "Excluding North America"
     ],
     "x-finastra-channel-type": "B2B",
-    "x-finastra-maturity-level": "BETA",
+    "x-finastra-maturity-level": "GA",
     "x-finastra-audience": "PUBLIC",
     "x-finastra-implementability": "RESTRICTED",
-    "x-finastra-icon": "Icons_2g.svg",
+    "x-finastra-icon": "Icons_9m.svg",
     "x-finastra-data-classification": [
       "Restricted"
     ],
-    "x-finastra-commitId": "874889587425981650644e3fca569c6fafdf0c51",
+    "x-finastra-commitId": "4a271b7c50049c5257123e6b47caffa7be5f1ef4",
     "contact": {
       "name": "API Support",
       "url": "https://community.fusionfabric.cloud/index.html"
     }
   },
+  "basePath": "/retail/psd2/stet/pisp/v1.3",
   "tags": [
     {
-      "name": "Accounts",
-      "description": "Retrieve details, balances and transactions for an account"
+      "name": "PISP",
+      "description": "A Payment Initiation Service Provider (PISP) is an authorized third-party entity (merchant) that can ask for permission to connect to a customer bank account and initiate payment on the customer's behalf, from their bank account. These APIs enable secure transfer initiation and payment status enquiry."
     }
   ],
+  "paths": {
+    "/payment-requests": {
+      "post": {
+        "tags": [
+          "PISP"
+        ],
+        "summary": "Initiate payment request from the customer bank account on behalf of a merchant",
+        "description": "The third-party provider (PISP) send a payment request to the customer's bank in a standard structure (ISO:20022 pain.013.014) to complete the commercial transaction.",
+        "operationId": "paymentRequestsPost_1",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json;charset=utf-8",
+          "application/hal+json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token to be passed as a header",
+            "required": true,
+            "type": "string",
+            "x-finastra-data-classification": [
+              "Restricted"
+            ]
+          },
+          {
+            "in": "body",
+            "name": "paymentRequest",
+            "description": "ISO20022 based payment Initiation Request",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PaymentRequestResource"
+            }
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "http-signature of the request (cf. https://datatracker.ietf.org/doc/draft-cavage-http-signatures/) The keyId part of the header should be formatted as follows   keiId=\"SN=XXX,CA=YYYYYYYYYYYYYYYY\" where   \"XXX\" is the serial number, in hexadecimal without any prefix (like 0x), of the QSEAL certificate whose relevant private key was used for signing   \"YYYYYYYYYYYYYYYY\" is the the Issuer DN, full Distinguished Name of the Certification Authority having issued this certificate  HTTP400 will be returned by the server in case of invalid or absent signature",
+            "required": true,
+            "type": "string",
+            "x-finastra-data-classification": [
+              "Restricted"
+            ]
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "description": "Correlation header to be set in a request and retrieved in the relevant response",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "description": "IP address used by the PSU's terminal when connecting to the TPP",
+            "required": false,
+            "type": "string",
+            "x-finastra-data-classification": [
+              "Restricted"
+            ]
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "description": "IP port used by the PSU's terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-HTTP-Method",
+            "in": "header",
+            "description": "Http method for the most relevant PSU's terminal request to the TTP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Date",
+            "in": "header",
+            "description": "Timestamp of the most relevant PSU's terminal request to the TTP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-GEO-Location",
+            "in": "header",
+            "description": "Geographical location of the PSU as provided by the PSU mobile terminal if any to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "description": "\"User-Agent\" header field sent by the PSU terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Referer",
+            "in": "header",
+            "description": "\"Referer\" header field sent by the PSU terminal when connecting to the TPP. Notice that an initial typo in RFC 1945 specifies that \"referer\" (incorrect spelling) is to be used. The correct spelling \"referrer\" can be used but might not be understood.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "description": "\"Accept\" header field sent by the PSU terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "description": "\"Accept-Charset\" header field sent by the PSU terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "description": "\"Accept-Encoding\" header field sent by the PSU terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "description": "\"Accept-Language\" header field sent by the PSU terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "description": "Digest of the body",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/HalPaymentTransferRequestCreation"
+            }
+          },
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/HalPaymentTransferRequestCreation"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized, authentication failure.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "403": {
+            "description": "Forbidden, authentication successful but access to resource is not allowed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "405": {
+            "description": "Method Not Allowed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "408": {
+            "description": "Request Timeout.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "429": {
+            "description": "Too many requests.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        },
+        "x-finastra-data-classification": [
+          "Restricted"
+        ]
+      }
+    },
+    "/payment-requests/{paymentRequestResourceId}": {
+      "get": {
+        "tags": [
+          "PISP"
+        ],
+        "summary": "Retrieve payment request status and details",
+        "description": "A third-party provider (PISP) request payment status from the bank (ASPSP - Account Servicing Payment Service Provider)",
+        "operationId": "paymentRequestsGet",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json;charset=utf-8",
+          "application/hal+json;charset=utf-8"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "Access token to be passed as a header",
+            "required": true,
+            "type": "string",
+            "x-finastra-data-classification": [
+              "Restricted"
+            ]
+          },
+          {
+            "name": "paymentRequestResourceId",
+            "in": "path",
+            "description": "Identification of the Payment Request Resource",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "Signature",
+            "in": "header",
+            "description": "http-signature of the request (cf. https://datatracker.ietf.org/doc/draft-cavage-http-signatures/) The keyId part of the header should be formatted as follows   keiId=\"SN=XXX,CA=YYYYYYYYYYYYYYYY\" where   \"XXX\" is the serial number, in hexadecimal without any prefix (like 0x), of the QSEAL certificate whose relevant private key was used for signing   \"YYYYYYYYYYYYYYYY\" is the the Issuer DN, full Distinguished Name of the Certification Authority having issued this certificate  HTTP400 will be returned by the server in case of invalid or absent signature",
+            "required": true,
+            "type": "string",
+            "x-finastra-data-classification": [
+              "Restricted"
+            ]
+          },
+          {
+            "name": "X-Request-ID",
+            "in": "header",
+            "description": "Correlation header to be set in a request and retrieved in the relevant response",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "PSU-IP-Address",
+            "in": "header",
+            "description": "IP address used by the PSU's terminal when connecting to the TPP",
+            "required": false,
+            "type": "string",
+            "x-finastra-data-classification": [
+              "Restricted"
+            ]
+          },
+          {
+            "name": "PSU-IP-Port",
+            "in": "header",
+            "description": "IP port used by the PSU's terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-HTTP-Method",
+            "in": "header",
+            "description": "Http method for the most relevant PSU's terminal request to the TTP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Date",
+            "in": "header",
+            "description": "Timestamp of the most relevant PSU's terminal request to the TTP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-GEO-Location",
+            "in": "header",
+            "description": "Geographical location of the PSU as provided by the PSU mobile terminal if any to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-User-Agent",
+            "in": "header",
+            "description": "\"User-Agent\" header field sent by the PSU terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Referer",
+            "in": "header",
+            "description": "\"Referer\" header field sent by the PSU terminal when connecting to the TPP. Notice that an initial typo in RFC 1945 specifies that \"referer\" (incorrect spelling) is to be used. The correct spelling \"referrer\" can be used but might not be understood.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Accept",
+            "in": "header",
+            "description": "\"Accept\" header field sent by the PSU terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Accept-Charset",
+            "in": "header",
+            "description": "\"Accept-Charset\" header field sent by the PSU terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Accept-Encoding",
+            "in": "header",
+            "description": "\"Accept-Encoding\" header field sent by the PSU terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "PSU-Accept-Language",
+            "in": "header",
+            "description": "\"Accept-Language\" header field sent by the PSU terminal when connecting to the TPP",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "Digest",
+            "in": "header",
+            "description": "Digest of the body",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieval of the previously posted Payment Request",
+            "schema": {
+              "$ref": "#/definitions/HalPaymentRequest"
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized, authentication failure.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "403": {
+            "description": "Forbidden, authentication successful but access to resource is not allowed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "404": {
+            "description": "Not found, no request available.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "405": {
+            "description": "Method Not Allowed.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "406": {
+            "description": "Not Acceptable.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "408": {
+            "description": "Request Timeout.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "429": {
+            "description": "Too many requests.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "503": {
+            "description": "Service unavailable.",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        },
+        "x-finastra-data-classification": [
+          "Restricted"
+        ]
+      }
+    }
+  },
   "securityDefinitions": {
     "Oauth2": {
       "type": "oauth2",
@@ -47,709 +470,182 @@
       "Oauth2": []
     }
   ],
-  "paths": {
-    "/accounts": {
-      "get": {
-        "tags": [
-          "Accounts"
-        ],
-        "summary": "Retrieve List of Accounts",
-        "description": "Retrieves the list of accounts for a customer",
-        "operationId": "searchAccounts",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/parameters/X-Request-ID"
-          },
-          {
-            "$ref": "#/parameters/CustomerId"
-          },
-          {
-            "name": "accountType",
-            "in": "query",
-            "description": "The type of account as defined in ISO20022 : ExternalCashAccountType1Code format.\r\n The following are some sample values:\r\n * CACC - Current Account\r\n * SVGS - Savings Account\r\n * SLRY - Salary Account\r\n",
-            "type": "string",
-            "maxLength": 4
-          },
-          {
-            "$ref": "#/parameters/Limit"
-          },
-          {
-            "$ref": "#/parameters/Offset"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "schema": {
-              "$ref": "#/definitions/SearchAccountsResponse"
-            }
-          },
-          "400": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-finastra-data-classification": [
-          "Restricted",
-          "Upload"
-        ]
-      }
-    },
-    "/accounts/{accountId}": {
-      "get": {
-        "summary": "Retrieve Account Details",
-        "description": "Retrieves the details of a customer account",
-        "operationId": "getAccountDetails",
-        "tags": [
-          "Accounts"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/parameters/X-Request-ID"
-          },
-          {
-            "$ref": "#/parameters/AccountId"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "schema": {
-              "$ref": "#/definitions/AccountDetail"
-            }
-          },
-          "400": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-finastra-data-classification": [
-          "Restricted"
-        ]
-      }
-    },
-    "/accounts/by": {
-      "get": {
-        "summary": "Retrieve Account Details using Alternate Identifier",
-        "description": "Retrieves the details of a customer account using one of the available alternate identifier.",
-        "operationId": "getAccountDetailsUsingAlternateIdentifier",
-        "tags": [
-          "Accounts"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/parameters/X-Request-ID"
-          },
-          {
-            "in": "query",
-            "name": "iban",
-            "description": "Account identifier in International Bank Account Number (IBAN) format. The format and content of the IBAN can be found in the standard ISO 13616",
-            "required": true,
-            "maxLength": 34,
-            "type": "string",
-            "x-finastra-data-classification": [
-              "Restricted"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "schema": {
-              "$ref": "#/definitions/AccountDetail"
-            }
-          },
-          "400": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-finastra-data-classification": [
-          "Restricted"
-        ]
-      }
-    },
-    "/accounts/{accountId}/balances": {
-      "get": {
-        "summary": "Retrieve Account Balances",
-        "description": "Retrieves the balances of a customer account",
-        "operationId": "getAccountBalance",
-        "tags": [
-          "Accounts"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/parameters/X-Request-ID"
-          },
-          {
-            "$ref": "#/parameters/AccountId"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "schema": {
-              "$ref": "#/definitions/AccountBalance"
-            }
-          },
-          "400": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-finastra-data-classification": [
-          "Restricted"
-        ]
-      }
-    },
-    "/accounts/{accountId}/transactions": {
-      "get": {
-        "summary": "Retrieve Account Transactions",
-        "description": "Retrieves the transactions for a customer account",
-        "operationId": "getAccountTransactions",
-        "tags": [
-          "Accounts"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/parameters/X-Request-ID"
-          },
-          {
-            "$ref": "#/parameters/AccountId"
-          },
-          {
-            "in": "query",
-            "name": "startDate",
-            "description": "Date to start transaction history filter. The value follows the  ISO8601 full-date notation, for example, 2017-07-21.\r\nDefault or *blank* startDate will retrieve transactions starting from the system/current date.",
-            "type": "string",
-            "format": "date"
-          },
-          {
-            "in": "query",
-            "name": "endDate",
-            "description": "Date to end transaction history filter. The value follows the ISO8601 full-date notation, for example, 2017-07-21.",
-            "type": "string",
-            "format": "date"
-          },
-          {
-            "$ref": "#/parameters/Limit"
-          },
-          {
-            "$ref": "#/parameters/Offset"
-          },
-          {
-            "in": "query",
-            "name": "sort",
-            "description": "Determines how the results should be sorted, using the values from available properties followed by either *+asc* or *+desc* parameters where *asc* means ascending and *desc* means descending order.\r\n\r\nThe sort parameter should be in the following format:\r\n * *(propertyName)*+[asc|desc], *(propertyName)*+[asc|desc]\r\n\r\nFor example:\r\n  * GET /accounts/0543123467001/transactions?sort=valueDateTime+asc\r\n\r\nThe following are available properties for sorting:\r\n * valueDateTime - Transaction value date and time. By default, transactions will be sorted by *valueDateTime* in descending order.",
-            "type": "string",
-            "maxLength": 30
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "schema": {
-              "$ref": "#/definitions/TransactionResponse"
-            }
-          },
-          "400": {
-            "description": "Error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "401": {
-            "description": "Unauthorized",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          },
-          "500": {
-            "description": "Internal server error",
-            "schema": {
-              "$ref": "#/definitions/ErrorResponse"
-            }
-          }
-        },
-        "x-finastra-data-classification": [
-          "Restricted"
-        ]
-      }
-    }
-  },
   "definitions": {
-    "SearchAccountsResponse": {
-      "title": "Search Accounts Response",
+    "AccountIdentification": {
       "type": "object",
-      "description": "List of accounts",
       "properties": {
-        "items": {
-          "description": "List of accounts",
+        "iban": {
+          "type": "string",
+          "description": "ISO20022: International Bank Account Number (IBAN) - identification used internationally by financial institutions to uniquely identify the account of a customer.   Further specifications of the format and content of the IBAN can be found in the standard ISO 13616 \"Banking and related financial services - International Bank Account Number (IBAN)\" version 1997-10-01, or later revisions. ",
+          "x-finastra-data-classification": [
+            "Restricted"
+          ]
+        },
+        "other": {
+          "$ref": "#/definitions/GenericIdentification"
+        }
+      },
+      "description": "Unique and unambiguous identification for the account between the account owner and the account servicer.",
+      "title": "AccountIdentification"
+    },
+    "AmountType": {
+      "type": "object",
+      "required": [
+        "amount",
+        "currency"
+      ],
+      "properties": {
+        "amount": {
+          "type": "string",
+          "description": "ISO20022: Amount of money to be moved between the debtor and creditor, before deduction of charges, expressed in the currency as ordered by the initiating party. "
+        },
+        "currency": {
+          "type": "string",
+          "description": "ISO20022: Specifies the currency of the to be transferred amount, which is different from the currency of the debtor's account. A code allocated to a currency by a Maintenance Agency under an international identification scheme, as described in the latest edition of the international standard ISO 4217 \"Codes for the representation of currencies and funds\".  "
+        }
+      },
+      "description": "ISO20022: structure aiming to carry either an instructed amount or equivalent amount. Both structures embed the amount and the currency to be used.  API: only instructed amount can be used ",
+      "title": "AmountType"
+    },
+    "CreditTransferTransaction": {
+      "type": "object",
+      "required": [
+        "instructedAmount",
+        "paymentId",
+        "remittanceInformation",
+        "requestedExecutionDate"
+      ],
+      "properties": {
+        "instructedAmount": {
+          "$ref": "#/definitions/AmountType"
+        },
+        "paymentId": {
+          "$ref": "#/definitions/PaymentIdentification"
+        },
+        "regulatoryReportingCode": {
+          "type": "string",
+          "description": "Information needed due to regulatory and statutory requirements.  Economical codes to be used are provided by the National Competent Authority "
+        },
+        "remittanceInformation": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/AccountDetail"
+            "type": "string"
           },
           "x-finastra-data-classification": [
             "Restricted"
           ]
         },
-        "links": {
-          "$ref": "#/definitions/AccountsLinks"
+        "requestedExecutionDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO20022: Date at which the initiating party requests the clearing agent to process the payment.  "
+        },
+        "statusReasonInformation": {
+          "type": "string",
+          "enum": [
+            "AC01",
+            "AC04",
+            "AC06",
+            "AG01",
+            "CUST",
+            "FF01",
+            "FRAD",
+            "MS03",
+            "NOAS",
+            "RR01",
+            "RR03",
+            "RR04",
+            "RR12"
+          ]
+        },
+        "transactionStatus": {
+          "type": "string",
+          "enum": [
+            "RJCT",
+            "PDNG",
+            "ACSP",
+            "ACSC"
+          ]
         }
-      }
+      },
+      "description": "ISO20022: Payment processes required to transfer cash from the debtor to the creditor.",
+      "title": "CreditTransferTransaction"
     },
-    "AccountsLinks": {
-      "title": "Accounts Links",
+    "ErrorModel": {
       "type": "object",
-      "description": "Links that can be used for further navigation when browsing through accounts of a customer. Length of a page is defined by the offset and limit values. \r\n * self: link to the accounts of a given customer\r\n * first: link to the first page of the accounts result\r\n * next: link to the next page of the accounts result\r\n * prev: link to the previous page of the accounts result",
       "required": [
-        "self"
+        "message",
+        "status"
       ],
       "properties": {
-        "self": {
-          "$ref": "#/definitions/GenericLink"
-        },
-        "first": {
-          "$ref": "#/definitions/GenericLink"
-        },
-        "next": {
-          "$ref": "#/definitions/GenericLink"
-        },
-        "prev": {
-          "$ref": "#/definitions/GenericLink"
-        }
-      }
-    },
-    "TransactionResponse": {
-      "title": "Transaction Response",
-      "type": "object",
-      "description": "List of transactions",
-      "properties": {
-        "accountId": {
-          "$ref": "#/definitions/AccountId"
-        },
-        "items": {
-          "description": "List of transactions",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Transaction"
-          }
-        },
-        "links": {
-          "$ref": "#/definitions/TransactionLinks"
-        }
-      }
-    },
-    "AccountId": {
-      "description": "The accountId is a unique and unambiguous identification of a bank account",
-      "title": "AccountId",
-      "type": "string",
-      "maxLength": 25,
-      "example": "0543123467001",
-      "x-finastra-data-classification": [
-        "Restricted"
-      ]
-    },
-    "AccountDetail": {
-      "description": "Basic information of the account",
-      "type": "object",
-      "title": "Account Detail",
-      "properties": {
-        "accountId": {
-          "$ref": "#/definitions/AccountId"
-        },
-        "accountName": {
-          "description": "The name of the account",
+        "error": {
           "type": "string",
-          "maxLength": 50,
-          "example": "Payroll Account",
+          "description": "HTTP error text"
+        },
+        "message": {
+          "type": "string",
+          "description": "HTTP textual reason phrase"
+        },
+        "path": {
+          "type": "string",
+          "description": "Relevant path that was used"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32",
+          "description": "HTTP error code"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "current timestamp"
+        }
+      },
+      "description": "Generic error report structure",
+      "title": "ErrorModel"
+    },
+    "FinancialInstitutionIdentification": {
+      "type": "object",
+      "required": [
+        "bicFi"
+      ],
+      "properties": {
+        "bicFi": {
+          "type": "string",
+          "description": "ISO20022: Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 \"Banking - Banking telecommunication messages - Business identification code (BIC)\". "
+        }
+      },
+      "description": "ISO20022: Unique and unambiguous identification of a financial institution, as assigned under an internationally recognised or proprietary identification scheme.  API: Only <Bicfi> element is allowed ",
+      "title": "FinancialInstitutionIdentification"
+    },
+    "GenericIdentification": {
+      "type": "object",
+      "required": [
+        "identification",
+        "issuer",
+        "schemeName"
+      ],
+      "properties": {
+        "identification": {
+          "type": "string",
+          "description": "API: alias of an account ",
           "x-finastra-data-classification": [
             "Restricted"
           ]
         },
-        "currency": {
-          "$ref": "#/definitions/Currency"
-        },
-        "customerType": {
-          "description": "The type of customer, either a person or an organisation",
+        "issuer": {
           "type": "string",
-          "maxLength": 12,
-          "enum": [
-            "PERSON",
-            "ORGANISATION"
-          ]
+          "description": "ISO20022: Entity that assigns the identification. this could a country code or any organisation name or identifier that can be recognized by both parties "
         },
-        "accountType": {
-          "$ref": "#/definitions/AccountTypes"
-        },
-        "accountStatus": {
-          "description": " Indicates whether the account can be used or whether its' use has been suspended or terminated",
+        "schemeName": {
           "type": "string",
-          "enum": [
-            "ENABLED",
-            "BLOCKED",
-            "CLOSED"
-          ]
-        },
-        "accountOwnership": {
-          "description": "Indentifies whether the account is is owned by a sole customer or jointly",
-          "type": "string",
-          "enum": [
-            "SOLE",
-            "JOINT"
-          ]
-        },
-        "postingsRestriction": {
-          "description": " Indicates any restriction on whether the account may be debited and/or credited",
-          "type": "string",
-          "enum": [
-            "DEBITCREDIT",
-            "DEBIT",
-            "CREDIT",
-            "NONE"
-          ]
-        },
-        "iban": {
-          "$ref": "#/definitions/IBAN"
-        },
-        "bban": {
-          "$ref": "#/definitions/BBAN"
+          "description": "Name of the identification scheme. Possible values for the scheme name, partially based on ISO20022 external code list, are the following: - BANK (BankPartyIdentification): Unique and unambiguous assignment made by a specific bank or similar financial institution to identify a relationship as defined between the bank and its client.  - COID (CountryIdentificationCode) : Country authority given organisation identification (e.g., corporate registration number) - SREN (SIREN): The SIREN number is a 9 digit code assigned by INSEE, the French National Institute for Statistics and Economic Studies, to identify an organisation in France. - SRET (SIRET): The SIRET number is a 14 digit code assigned by INSEE, the French National Institute for Statistics and Economic Studies, to identify an organisation unit in France. It consists of the SIREN number, followed by a five digit classification number, to identify the local geographical unit of that entity. - NIDN (NationalIdentityNumber): Number assigned by an authority to identify the national identity number of a person. Other values are also permitted, for instance: - OAUT (OAUTH2): OAUTH2 access token that is owned by the PISP being also an AISP and that can be used in order to identify the PSU - CPAN (CardPan): Card PAN "
         }
-      }
-    },
-    "AccountBalance": {
-      "type": "object",
-      "title": "Account Balance",
-      "description": "Account balance details",
-      "properties": {
-        "accountId": {
-          "$ref": "#/definitions/AccountId"
-        },
-        "balances": {
-          "$ref": "#/definitions/BalanceList"
-        }
-      }
-    },
-    "BalanceType": {
-      "title": "Balance Type",
-      "description": "The following are balance types and description:\r\n * CLOSINGBOOKED - Balance of the account at the end of the pre-agreed account reporting period. It is the sum of the opening booked balance at the beginning of the period and all entries booked to the account during the pre-agreed account reporting period.\r\n * OPENINGBOOKED - Book balance of the account at the beginning of the account reporting period. It always equals the closing book balance from the previous report.\r\n * INTERIMAVAILABLE -  Available balance calculated in the course of the account ?servicer?s business day, at the time specified, and subject to further changes during the business day. The interim balance is calculated on the basis of booked credit and debit items during the calculation time/period specified.\r\n * INTERIMBOOKED - Balance calculated in the course of the account servicer's business day, at the time specified, and subject to further changes during the business day. The interim balance is calculated on the basis of booked credit and debit items during the calculation time/period specified.\r\n * INTERIMCLEARD - Balance which includes all cleared account items into and out of the account since the previous business day excluding uncleared items and excluding reserved amounts",
-      "type": "string",
-      "maxLength": 25,
-      "enum": [
-        "CLOSINGBOOKED",
-        "OPENINGBOOKED",
-        "INTERIMAVAILABLE",
-        "INTERIMBOOKED",
-        "INTERIMCLEARED"
-      ]
-    },
-    "BalanceList": {
-      "title": "Balance List",
-      "description": "List of account balances",
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/Balance"
-      }
-    },
-    "Balance": {
-      "title": "Balance",
-      "description": "Structure of an account balance",
-      "type": "object",
-      "properties": {
-        "balanceType": {
-          "$ref": "#/definitions/BalanceType"
-        },
-        "amount": {
-          "$ref": "#/definitions/MonetaryAmount"
-        },
-        "dateTime": {
-          "description": "Reference date and time of the balance. The format follows the ISO8601 date-time notation.",
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "Transaction": {
-      "title": "Transaction",
-      "description": "Transaction detail",
-      "type": "object",
-      "properties": {
-        "transactionId": {
-          "description": "Unique transaction identifier",
-          "type": "string",
-          "maxLength": 50,
-          "example": "543123467001"
-        },
-        "bookingDateTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The booking date and time of the transaction. The format follows the ISO8601 date-time notation.",
-          "example": "2019-02-01T00:00:00.000+01:00"
-        },
-        "valueDateTime": {
-          "type": "string",
-          "format": "date-time",
-          "description": "The value date and time of the transaction. The format follows the ISO8601 date-time notation",
-          "example": "2019-02-01T00:00:00.000+01:00"
-        },
-        "description": {
-          "type": "string",
-          "description": "Defines the transaction description.",
-          "maxLength": 100,
-          "example": "Fund transfer"
-        },
-        "amount": {
-          "$ref": "#/definitions/TransactionAmount",
-          "description": "The amount transacted and the currency"
-        },
-        "creditDebitIndicator": {
-          "description": "The posting type (debit or credit)",
-          "type": "string",
-          "enum": [
-            "DEBIT",
-            "CREDIT"
-          ]
-        },
-        "debtor": {
-          "description": "Account numbers of the debtor",
-          "$ref": "#/definitions/AccountNumbers"
-        },
-        "creditor": {
-          "description": "Account numbers of the creditor",
-          "$ref": "#/definitions/AccountNumbers"
-        }
-      }
-    },
-    "AccountNumbers": {
-      "title": "Account Numbers",
-      "type": "object",
-      "description": "Different account numbers",
-      "properties": {
-        "iban": {
-          "$ref": "#/definitions/IBAN"
-        },
-        "accountId": {
-          "$ref": "#/definitions/AccountId"
-        },
-        "accountName": {
-          "description": "Name of the acccount",
-          "type": "string",
-          "maxLength": 50,
-          "example": "Payroll Account",
-          "x-finastra-data-classification": [
-            "Restricted"
-          ]
-        },
-        "bban": {
-          "$ref": "#/definitions/BBAN"
-        },
-        "bic": {
-          "$ref": "#/definitions/BIC"
-        }
-      }
-    },
-    "IBAN": {
-      "description": "International Bank Account Number (IBAN) Identifier.\r\nIdentifier used internationally by financial institutions to uniquely identify the account of a customer at a financial institution, as described in the latest edition of the international standard ISO 13616.",
-      "title": "IBAN",
-      "type": "string",
-      "maxLength": 34,
-      "pattern": "[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}",
-      "example": "GB33BUKB20201555555555",
-      "x-finastra-data-classification": [
-        "Restricted"
-      ]
-    },
-    "BIC": {
-      "description": "Bank Identifier Code.\r\nISO20022: Code allocated to a financial institution by the ISO 9362 Registration Authority as described in ISO 9362 *Banking - Banking telecommunication messages - Business identification code (BIC)*",
-      "title": "BIC",
-      "type": "string",
-      "pattern": "[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}",
-      "example": "BOFIIE2D"
-    },
-    "BBAN": {
-      "description": " Basic Bank Account Number (BBAN) Identifier\r\nIdentifier used nationally by financial institutions, i.e., in individual countries, generally as part of a National Account Numbering Scheme(s), which uniquely identifies the account of a customer.",
-      "title": "BBAN",
-      "type": "string",
-      "maxLength": 30,
-      "pattern": "[a-zA-Z0-9]{1,30}",
-      "example": "NWBK60161331926819",
-      "x-finastra-data-classification": [
-        "Restricted"
-      ]
-    },
-    "AccountTypes": {
-      "description": "The type of account in ISO2022 : ExternalCashAccountType1Code format.\r\n The following are some sample values:\r\n * CACC - Current Account\r\n * SVGS - Savings Account\r\n * SLRY - Salary Account\r\n",
-      "title": "AccountTypes",
-      "type": "string",
-      "maxLength": 4,
-      "example": "CACC"
-    },
-    "Amount": {
-      "title": "Amount",
-      "description": "The amount given with fractional digits.\r\n Negative amounts are signed by minus. The decimal separator is a dot.",
-      "type": "string",
-      "pattern": "-?[0-9]{1,18}(\\.[0-9]{1,3})?",
-      "example": "5877.78"
-    },
-    "MonetaryAmount": {
-      "title": "Monetary Amount",
-      "description": "A monetary amount in a given currency supporting an amount format of 18.3",
-      "type": "object",
-      "properties": {
-        "amount": {
-          "$ref": "#/definitions/Amount"
-        },
-        "currency": {
-          "$ref": "#/definitions/Currency"
-        }
-      }
-    },
-    "TransactionAmount": {
-      "title": "Transaction Amount",
-      "description": "A monetary amount in a given currency supporting an amount format of 18.3. The amount is always positive.",
-      "type": "object",
-      "properties": {
-        "amount": {
-          "title": "Transaction Amount",
-          "description": "The amount given with fractional digits. The decimal separator is a dot. The amount must be positive",
-          "type": "string",
-          "pattern": "^[0-9]{1,18}(\\.[0-9]{1,3})?",
-          "example": "5877.78"
-        },
-        "currency": {
-          "$ref": "#/definitions/Currency"
-        }
-      }
-    },
-    "Currency": {
-      "title": "Currency",
-      "description": "ISO 4217: currency code, it is the identifier of the currency",
-      "type": "string",
-      "pattern": "^[A-Z]{3,3}$",
-      "example": "EUR"
-    },
-    "TransactionLinks": {
-      "title": "Transaction Links",
-      "type": "object",
-      "description": "Links that can be used for further navigation when browsing through transactions of an account. Length of a page is defined by the offset and limit values. \r\n * self: link to the transactions of a given account\r\n * first: link to the first page of the transactions result\r\n * next: link to the next page of the transactions result\r\n * prev: link to the previous page of the transactions result",
-      "required": [
-        "self"
-      ],
-      "properties": {
-        "self": {
-          "$ref": "#/definitions/GenericLink"
-        },
-        "first": {
-          "$ref": "#/definitions/GenericLink"
-        },
-        "next": {
-          "$ref": "#/definitions/GenericLink"
-        },
-        "prev": {
-          "$ref": "#/definitions/GenericLink"
-        }
-      }
+      },
+      "description": "ISO20022: Unique identification of an account, a person or an organisation, as assigned by an issuer.",
+      "title": "GenericIdentification"
     },
     "GenericLink": {
-      "title": "Generic Link",
       "type": "object",
       "required": [
         "href"
@@ -757,153 +653,355 @@
       "properties": {
         "href": {
           "type": "string",
-          "description": "URI to be used",
-          "maxLength": 140
+          "description": "URI to be used"
         },
         "templated": {
           "type": "boolean",
+          "example": false,
           "description": "specifies \"true\" if href is a URI template, i.e. with parameters. Otherwise, this property is absent or set to false"
         }
       },
-      "description": "Hypertext reference"
+      "description": "hypertext reference",
+      "title": "GenericLink"
     },
-    "ErrorResponse": {
-      "title": "ErrorResponse",
+    "HalPaymentRequest": {
       "type": "object",
-      "description": "Used as a standard error message structure that complies with RFC7807",
       "required": [
-        "title",
-        "status"
+        "_links",
+        "paymentRequest"
       ],
       "properties": {
-        "type": {
-          "type": "string",
-          "maxLength": 256,
-          "description": "A URI reference that identifies the  problem type",
-          "example": "https://api.finastra.com/validation-error"
+        "_links": {
+          "$ref": "#/definitions/PaymentTransferRequestLinks"
         },
-        "title": {
-          "type": "string",
-          "maxLength": 256,
-          "description": "A short summary of the problem type.",
-          "example": "The request is invalid"
+        "paymentRequest": {
+          "$ref": "#/definitions/PaymentRequestResource"
+        }
+      },
+      "description": "HYPERMEDIA structure used for returning the original Payment Request to the PISP",
+      "title": "HalPaymentRequest"
+    },
+    "HalPaymentTransferRequestCreation": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/PaymentTransferRequestResourceCreationLinks"
         },
-        "status": {
+        "appliedScaApproach": {
+          "type": "string",
+          "enum": [
+            "REDIRECT",
+            "DECOUPLED",
+            "EMBEDDED"
+          ]
+        }
+      },
+      "description": "data forwarded by the ASPSP top the PISP after creation of the Payment or Transfer Request resource creation ",
+      "title": "HalPaymentTransferRequestCreation"
+    },
+    "PartyIdentification": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "ISO20022: Name by which a party is known and which is usually used to identify that party. ",
+          "x-finastra-data-classification": [
+            "Restricted"
+          ]
+        },
+        "organisationId": {
+          "description": "Unique and unambiguous way to identify an organisation.",
+          "$ref": "#/definitions/GenericIdentification"
+        },
+        "postalAddress": {
+          "$ref": "#/definitions/PostalAddress"
+        },
+        "privateId": {
+          "description": "Unique and unambiguous identification of a person.",
+          "$ref": "#/definitions/GenericIdentification"
+        }
+      },
+      "description": "API : Description of a Party which can be either a person or an organization.",
+      "title": "PartyIdentification"
+    },
+    "PaymentIdentification": {
+      "type": "object",
+      "required": [
+        "endToEndId",
+        "instructionId"
+      ],
+      "properties": {
+        "ResourceId": {
+          "type": "string",
+          "description": "API: Identifier assigned by the ASPSP for further use of the created resource through API calls "
+        },
+        "endToEndId": {
+          "type": "string",
+          "description": "ISO20022: Unique identification assigned by the initiating party to unambiguously identify the transaction. This identification is passed on, unchanged, throughout the entire end-to-end chain.  API: Unique identification shared between the merchant and the PSU "
+        },
+        "instructionId": {
+          "type": "string",
+          "description": "ISO20022: Unique identification as assigned by an instructing party for an instructed party to unambiguously identify the instruction.  API: Unique identification shared between the PISP and the ASPSP  "
+        }
+      },
+      "description": "ISO20022: Set of elements used to reference a payment instruction.",
+      "title": "PaymentIdentification"
+    },
+    "PaymentRequestResource": {
+      "type": "object",
+      "required": [
+        "creationDateTime",
+        "creditTransferTransaction",
+        "creditor",
+        "creditorAccount",
+        "initiatingParty",
+        "numberOfTransactions",
+        "paymentInformationId",
+        "paymentTypeInformation",
+        "supplementaryData"
+      ],
+      "properties": {
+        "chargeBearer": {
+          "type": "string",
+          "description": "- ISO2002: Specifies which party/parties will bear the charges associated with the processing of the payment transaction. - API: Set to \"SLEV\" or omitted",
+          "enum": [
+            "SLEV"
+          ]
+        },
+        "creationDateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO20022: Date and time at which a (group of) payment instruction(s) was created by the instructing party."
+        },
+        "creditTransferTransaction": {
+          "type": "array",
+          "description": "ISO20022: Payment processes required to transfer cash from the debtor to the creditor.",
+          "items": {
+            "$ref": "#/definitions/CreditTransferTransaction"
+          },
+          "x-finastra-data-classification": [
+            "Restricted"
+          ]
+        },
+        "creditor": {
+          "$ref": "#/definitions/PartyIdentification"
+        },
+        "creditorAccount": {
+          "$ref": "#/definitions/AccountIdentification"
+        },
+        "creditorAgent": {
+          "$ref": "#/definitions/FinancialInstitutionIdentification"
+        },
+        "debtor": {
+          "$ref": "#/definitions/PartyIdentification"
+        },
+        "debtorAccount": {
+          "$ref": "#/definitions/AccountIdentification"
+        },
+        "debtorAgent": {
+          "$ref": "#/definitions/FinancialInstitutionIdentification"
+        },
+        "initiatingParty": {
+          "$ref": "#/definitions/PartyIdentification"
+        },
+        "numberOfTransactions": {
           "type": "integer",
           "format": "int32",
-          "description": "The HTTP status code generated by the origin server for this occurrence of the problem.",
-          "example": 400
+          "description": "ISO20022: Number of individual transactions contained in the message. "
         },
-        "detail": {
+        "paymentInformationId": {
           "type": "string",
-          "maxLength": 256,
-          "description": "A human-readable explanation specific to this occurrence of the problem.",
-          "example": "The account does not exist"
+          "description": "ISO20022 : Reference assigned by a sending party to unambiguously identify the payment information block within the message. "
         },
-        "causes": {
-          "description": "An optional array of additional causes associated with the error",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Cause"
-          }
+        "paymentInformationStatus": {
+          "type": "string",
+          "enum": [
+            "ACCP",
+            "ACSC",
+            "ACSP",
+            "ACTC",
+            "ACWC",
+            "ACWP",
+            "RCVD",
+            "PNDG",
+            "RJCT"
+          ]
+        },
+        "paymentTypeInformation": {
+          "$ref": "#/definitions/PaymentTypeInformation"
+        },
+        "purpose": {
+          "type": "string",
+          "enum": [
+            "ACCT",
+            "CASH",
+            "COMC",
+            "CPKC",
+            "TRPT"
+          ]
+        },
+        "resourceId": {
+          "type": "string",
+          "description": "API: Identifier assigned by the ASPSP for further use of the created resource through API calls "
+        },
+        "statusReasonInformation": {
+          "type": "string",
+          "enum": [
+            "AC01",
+            "AC04",
+            "AC06",
+            "AG01",
+            "CUST",
+            "FF01",
+            "FRAD",
+            "MS03",
+            "NOAS",
+            "RR01",
+            "RR03",
+            "RR04",
+            "RR12"
+          ]
+        },
+        "supplementaryData": {
+          "$ref": "#/definitions/SupplementaryData"
+        },
+        "ultimateCreditor": {
+          "$ref": "#/definitions/PartyIdentification"
         }
-      }
+      },
+      "description": "ISO20022: The PaymentRequestResource message is sent by the Creditor sending party to the Debtor receiving party, directly or through agents. It is used by a Creditor to request movement of funds from the debtor account to a creditor.",
+      "title": "PaymentRequestResource"
     },
-    "Cause": {
-      "title": "Cause",
+    "PaymentTransferRequestLinks": {
       "type": "object",
-      "description": "Used to define additional causes associated with the error when the associated error message does not provide sufficient clarity on remediation of the error",
       "properties": {
-        "code": {
-          "type": "string",
-          "maxLength": 8,
-          "description": "A code referencing the problem associated with this cause of the error",
-          "example": "40280151"
+        "confirmation": {
+          "description": "This link shall not been provided when then confirmation has already been posted.",
+          "$ref": "#/definitions/GenericLink"
         },
-        "message": {
-          "type": "string",
-          "maxLength": 256,
-          "description": "A short human-readable summary of the problem associated with this cause of the error",
-          "example": "The account '1234567890' is dormant."
-        },
-        "severity": {
-          "type": "string",
-          "maxLength": 25,
-          "description": "The severity associated with this cause of the error",
-          "example": "ERROR"
-        },
-        "comment": {
-          "type": "string",
-          "maxLength": 256,
-          "description": "A short human-readable comment or note associated with this cause of the error",
-          "example": "Ensure the account is active for the request"
-        },
-        "field": {
-          "type": "string",
-          "maxLength": 256,
-          "description": "The field associated with this cause of the error",
-          "example": "account"
-        },
-        "fieldValue": {
-          "type": "string",
-          "maxLength": 256,
-          "description": "The value of the field associated with this cause of the error",
-          "example": "1234567890"
+        "self": {
+          "$ref": "#/definitions/GenericLink"
         }
-      }
-    }
-  },
-  "parameters": {
-    "X-Request-ID": {
-      "name": "X-Request-ID",
-      "description": "A unique ID of the request, unique to the call, as determined by the initiating party. A UUID must be set in this header to uniquely identify the request.",
-      "in": "header",
-      "required": true,
-      "type": "string",
-      "format": "uuid"
+      },
+      "description": "links that can be used for further navigation when having post a Payment Request in order to get the relevant status report.",
+      "title": "PaymentTransferRequestLinks"
     },
-    "CustomerId": {
-      "name": "customerId",
-      "in": "query",
-      "description": "The customerId is a unique and unambiguous identification of a bank customer.\r\n Wildcard characters are not accepted.",
-      "required": true,
-      "maxLength": 35,
-      "type": "string",
-      "x-finastra-data-classification": [
-        "Restricted",
-        "Upload"
-      ]
+    "PaymentTransferRequestResourceCreationLinks": {
+      "type": "object",
+      "properties": {
+        "consentApproval": {
+          "description": "URL to be used by the PISP in order to start the ASPSP SCA and consent management process",
+          "$ref": "#/definitions/GenericLink"
+        }
+      },
+      "description": "links that can be used for further navigation, especially in REDIRECT approach",
+      "title": "PaymentTransferRequestResourceCreationLinks"
     },
-    "AccountId": {
-      "name": "accountId",
-      "in": "path",
-      "description": "The accountId is a unique and unambiguous identification of a bank account",
-      "type": "string",
-      "required": true,
-      "maxLength": 25,
-      "x-finastra-data-classification": [
-        "Restricted"
-      ]
+    "PaymentTypeInformation": {
+      "type": "object",
+      "required": [
+        "serviceLevel"
+      ],
+      "properties": {
+        "categoryPurpose": {
+          "type": "string",
+          "enum": [
+            "CASH",
+            "DVPM"
+          ]
+        },
+        "instructionPriority": {
+          "type": "string",
+          "enum": [
+            "HIGH",
+            "NORM"
+          ]
+        },
+        "localInstrument": {
+          "type": "string",
+          "enum": [
+            "INST"
+          ]
+        },
+        "serviceLevel": {
+          "type": "string",
+          "enum": [
+            "NURG",
+            "SEPA"
+          ]
+        }
+      },
+      "description": "ISO20022: Set of elements used to further specify the type of transaction.",
+      "title": "PaymentTypeInformation"
     },
-    "Limit": {
-      "name": "limit",
-      "in": "query",
-      "description": "The maximum number of rows that may be returned. This parameter can be thought of as the page size.",
-      "type": "integer",
-      "format": "int32",
-      "default": 10
+    "PostalAddress": {
+      "type": "object",
+      "required": [
+        "addressLine",
+        "country"
+      ],
+      "properties": {
+        "addressLine": {
+          "type": "array",
+          "description": "Unstructured address. The two lines must embed zip code and town name",
+          "items": {
+            "type": "string"
+          },
+          "x-finastra-data-classification": [
+            "Restricted"
+          ]
+        },
+        "country": {
+          "type": "string",
+          "description": "ISO20022: Country in which a person resides (the place of a person's home). In the case of a company, it is the country from which the affairs of that company are directed. ",
+          "x-finastra-data-classification": [
+            "Restricted"
+          ]
+        }
+      },
+      "description": "ISO20022 : Information that locates and identifies a specific address, as defined by postal services.",
+      "title": "PostalAddress"
     },
-    "Offset": {
-      "in": "query",
-      "name": "offset",
-      "description": "Set to offset the results to a particular row count.\n\n Example: GET /accounts?offset=100 will return the accounts 101 and more.",
-      "type": "integer",
-      "format": "int32",
-      "default": 0
+    "SupplementaryData": {
+      "type": "object",
+      "properties": {
+        "acceptedScaApproach": {
+          "type": "array",
+          "description": "can only be set by the PISP SCA approaches that are supported by the PISP. The PISP can provide several choices separated by commas.  REDIRECT: the PSU is redirected by the TPP to the ASPSP which processes identification and authentication DECOUPLED: the TPP identifies the PSU and forwards the identification to the ASPSP which processes the authentication through a decoupled device EMBEDDED: the TPP identifies the PSU and forwards the identification to the ASPSP which starts the authentication. The TPP forwards one authentication factor of the PSU (e.g. OTP or response to a challenge)",
+          "items": {
+            "type": "string",
+            "enum": [
+              "REDIRECT",
+              "DECOUPLED",
+              "EMBEDDED"
+            ]
+          }
+        },
+        "appliedScaApproach": {
+          "type": "string",
+          "enum": [
+            "REDIRECT",
+            "DECOUPLED",
+            "EMBEDDED"
+          ]
+        },
+        "successfulReportUrl": {
+          "type": "string",
+          "description": "URL to be used by the ASPSP in order to notify the PISP of the finalisation of the SCA and consent process in REDIRECT and DECOUPLED approach "
+        },
+        "unsuccessfulReportUrl": {
+          "type": "string",
+          "description": "URL to be used by the ASPSP in order to notify the PISP of the failure of the SCA and consent process in REDIRECT and DECOUPLED approach  If this URL is not provided by the PISP, the ASPSP will use the \"successfulReportUrl\" even in case of failure of the Payment or Transfer Request processing "
+        }
+      },
+      "description": "ISO20022: Additional information that cannot be captured in the structured elements and/or any other specific block.  API: This structure is used to embed the relevant URLs for returning the status report to the PISP and to specify which SCA approaches are accepted by the PISP and which has been chosen by the ASPSP",
+      "title": "SupplementaryData"
     }
   },
   "host": "api.ffdcdev.fusionfabric.cloud",
-  "basePath": "/retail-banking/accounts/v1",
   "schemes": [
     "https"
   ]

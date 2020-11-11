@@ -6,7 +6,7 @@ const headerFontSize = {
   3: '1.27em',
 };
 
-export const headerCommonMixin = level => css`
+export const headerCommonMixin = (level) => css`
   font-family: ${({ theme }) => theme.typography.headings.fontFamily};
   font-weight: ${({ theme }) => theme.typography.headings.fontWeight};
   font-size: ${headerFontSize[level]};
@@ -23,7 +23,9 @@ export const H1 = styled.h1`
 export const H2 = styled.h2`
   ${headerCommonMixin(2)};
   color: black;
-
+  display: flex;
+  align-items: center;
+  justify-content: left;
   ${extensionsHook('H2')};
 `;
 

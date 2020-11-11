@@ -69,7 +69,7 @@ export const Badge = styled.span<{ type: string }>`
 export const FinastraBadge = styled.span<{ type: string }>`
   display: inline-block;
   padding: 2px 8px;
-  margin: 0;
+  margin-left: 8px;
   height: 20px;
   width: 78px;
   background-color: ${(props) => props.theme.colors[props.type].main};
