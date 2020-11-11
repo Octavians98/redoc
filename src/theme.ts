@@ -19,6 +19,18 @@ const defaultTheme: ThemeInterface = {
       dark: ({ colors }) => darken(colors.tonalOffset, colors.primary.main),
       contrastText: ({ colors }) => readableColor(colors.primary.main),
     },
+    dataClassificationField: {
+      main: '#CA5000',
+      light: ({ colors }) => lighten(colors.tonalOffset, colors.warning.main),
+      dark: ({ colors }) => darken(colors.tonalOffset, colors.warning.main),
+      contrastText: '#ffffff',
+    },
+    dataClassificationEndpoint: {
+      main: '#32329f',
+      light: ({ colors }) => lighten(colors.tonalOffset, colors.primary.main),
+      dark: ({ colors }) => darken(colors.tonalOffset, colors.primary.main),
+      contrastText: '#ffffff',
+    },
     success: {
       main: '#1d8127',
       light: ({ colors }) => lighten(colors.tonalOffset * 2, colors.success.main),
@@ -80,21 +92,21 @@ const defaultTheme: ThemeInterface = {
     },
   },
   schema: {
-    linesColor: theme =>
+    linesColor: (theme) =>
       lighten(
         theme.colors.tonalOffset,
         desaturate(theme.colors.tonalOffset, theme.colors.primary.main),
       ),
     defaultDetailsWidth: '75%',
-    typeNameColor: theme => theme.colors.text.secondary,
-    typeTitleColor: theme => theme.schema.typeNameColor,
-    requireLabelColor: theme => theme.colors.error.main,
+    typeNameColor: (theme) => theme.colors.text.secondary,
+    typeTitleColor: (theme) => theme.schema.typeNameColor,
+    requireLabelColor: (theme) => theme.colors.error.main,
     labelsTextSize: '0.9em',
     nestingSpacing: '1em',
     nestedBackground: '#fafafa',
     arrow: {
       size: '1.1em',
-      color: theme => theme.colors.text.secondary,
+      color: (theme) => theme.colors.text.secondary,
     },
   },
   typography: {
@@ -130,7 +142,7 @@ const defaultTheme: ThemeInterface = {
     width: '260px',
     backgroundColor: '#fafafa',
     textColor: '#333333',
-    activeTextColor: theme =>
+    activeTextColor: (theme) =>
       theme.sidebar.textColor !== defaultTheme.sidebar!.textColor
         ? theme.sidebar.textColor
         : theme.colors.primary.main,
@@ -142,7 +154,7 @@ const defaultTheme: ThemeInterface = {
     },
     arrow: {
       size: '1.5em',
-      color: theme => theme.sidebar.textColor,
+      color: (theme) => theme.sidebar.textColor,
     },
   },
   logo: {
@@ -166,7 +178,7 @@ export function resolveTheme(theme: ThemeInterface): ResolvedThemeInterface {
   const resolvedValues = {};
   let counter = 0;
   const setProxy = (obj, path: string) => {
-    Object.keys(obj).forEach(k => {
+    Object.keys(obj).forEach((k) => {
       const currentPath = (path ? path + '.' : '') + k;
       const val = obj[k];
       if (typeof val === 'function') {
@@ -230,6 +242,8 @@ export interface ResolvedThemeInterface {
   colors: {
     tonalOffset: number;
     primary: ColorSetting;
+    dataClassificationField: ColorSetting;
+    dataClassificationEndpoint: ColorSetting;
     success: ColorSetting;
     warning: ColorSetting;
     error: ColorSetting;
